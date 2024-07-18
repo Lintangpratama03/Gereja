@@ -57,3 +57,4 @@ Route::patch('/rute/{id}/update-status', [App\Http\Controllers\ValidasiControlle
 Route::patch('/rute/{id}/soft-delete', [App\Http\Controllers\ValidasiController::class, 'softDelete'])->name('rute.softDelete');
 
 Route::get('/get-price', [App\Http\Controllers\PemesananController::class, 'getPrice'])->name('getPrice');
+Route::post('/check-schedule', [PemesananController::class, 'checkSchedule'])->name('check.schedule');

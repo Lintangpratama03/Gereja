@@ -48,7 +48,7 @@
         <div class="col-12">
             <div class="card shadow">
                 <div class="card-body">
-                    <form method="POST" action="{{ route('store') }}" class="user">
+                    <form method="POST" action="{{ route('store') }}" class="user" id="reservation-form">
                         @csrf
                         <div class="form-row">
                             <div class="form-group col-md-12">
@@ -138,6 +138,34 @@
                     },
                     error: function(xhr) {
                         console.log(xhr.responseText); // Handle error
+                    }
+                });
+            });
+            $('#reservation-form').on('submit', function(e) {
+                e.preventDefault();
+                var start = $('#start').val();
+                var end = $('#end').val();
+                var waktu = $('#waktu').val();
+
+                $.ajax({
+                    url: '{{ route('check.schedule') }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        start: start,
+                        end: end,
+                        waktu: waktu
+                    },
+                    success: function(response) {
+                        if (response.exists) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Jadwal Sudah Ada',
+                                text: 'Jadwal dengan tanggal dan waktu yang sama sudah ada. Silakan pilih waktu yang berbeda.'
+                            });
+                        } else {
+                            $('#reservation-form')[0].submit();
+                        }
                     }
                 });
             });

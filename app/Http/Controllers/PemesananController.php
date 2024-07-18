@@ -41,6 +41,28 @@ class PemesananController extends Controller
         $pendeta = User::where('level', 'Pendeta')->get();
         return view('client.index', compact('data', 'category', 'pendeta'));
     }
+    public function checkSchedule(Request $request)
+    {
+        $start = $request->input('start');
+        $end = $request->input('end');
+        $tanggal = $request->input('waktu');
+
+        $ruteExists = Rute::where('tanggal', $tanggal)
+            ->where(function ($query) use ($start, $end) {
+                $query->whereBetween('start', [$start, $end])
+                    ->orWhereBetween('end', [$start, $end])
+                    ->orWhere(function ($query) use ($start, $end) {
+                        $query->where('start', '<=', $start)
+                            ->where('end', '>=', $end);
+                    });
+            })->where('status', 1)->exists();
+
+        if ($ruteExists) {
+            return response()->json(['exists' => true]);
+        }
+
+        return response()->json(['exists' => false]);
+    }
 
     public function getPrice(Request $request)
     {
@@ -80,6 +102,21 @@ class PemesananController extends Controller
             'category' => 'required',
             'harga' => 'required'
         ]);
+        $scheduleExists = Rute::where('tanggal', $request->waktu)
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('start', [$request->start, $request->end])
+                    ->orWhereBetween('end', [$request->start, $request->end])
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where('start', '<=', $request->start)
+                            ->where('end', '>=', $request->end);
+                    });
+            })
+            ->where('status', 1)
+            ->exists();
+
+        if ($scheduleExists) {
+            return redirect()->back()->with('error', 'Jadwal sudah ada!');
+        }
         // Create or update transportasi
         $transportasi = Transportasi::updateOrCreate(
             [
