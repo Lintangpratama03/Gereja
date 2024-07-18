@@ -58,7 +58,7 @@ class PemesananController extends Controller
             })->where('status', 1)->exists();
 
         if ($ruteExists) {
-            return response()->json(['exists' => true]);
+            return redirect()->back()->with('error', 'Jadwal sudah ada!');
         }
 
         return response()->json(['exists' => false]);
@@ -158,9 +158,19 @@ class PemesananController extends Controller
 
     public function list()
     {
-        $rute = Rute::with('transportasi')->where('jemaat',  Auth::user()->id)->get();
+        // Mengambil id pengguna saat ini
+        $userId = Auth::user()->id;
+
+        // Mengambil rute dengan informasi transportasi dan menentukan status setiap rute
+        $rute = Rute::with('transportasi')
+            ->where('jemaat', $userId)
+            ->select('rute.*')
+            ->selectRaw('CASE WHEN EXISTS (SELECT 1 FROM pemesanan WHERE pemesanan.rute_id = rute.id) THEN 1 ELSE 0 END AS status_pesan')
+            ->get();
+        // dd($rute);
         return view('client.pemesanan-list', compact('rute'));
     }
+
 
 
     public function pesan($id)

@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('title', 'Daftar Pengajuan Acara')
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @section('content')
     <div class="row justify-content-center">
         <div class="col-12">
@@ -54,12 +55,15 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($item->status == 1)
-                                            <a href="{{ route('pemesanan.pesan', $item->id) }}"
-                                                class="btn btn-primary btn-sm">Pesan</a>
-                                        @elseif ($item->status == 2)
-                                            <a href="{{ route('pemesanan.pendeta', $item->id) }}"
-                                                class="btn btn-primary">Ganti Pendeta</a>
+                                        @if ($item->status_pesan == 0)
+                                            @if ($item->status == 1)
+                                                <a href="{{ route('pemesanan.pesan', $item->id) }}"
+                                                    class="btn btn-primary btn-sm">Pesan</a>
+                                            @elseif ($item->status == 2)
+                                                <a href="{{ route('pemesanan.pendeta', $item->id) }}"
+                                                    class="btn btn-primary">Ganti Pendeta</a>
+                                            @endif
+                                        @else
                                         @endif
                                     </td>
                                 </tr>
