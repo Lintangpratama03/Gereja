@@ -71,6 +71,7 @@ class RuteController extends Controller
                 'pendeta' => $request->pendeta,
                 'end' => $request->end,
                 'harga' => $request->harga,
+                'is_aktif' => 1,
                 'transportasi_id' => $request->transportasi_id,
             ]
         );

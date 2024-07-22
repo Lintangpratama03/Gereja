@@ -28,6 +28,34 @@
         .text-muted {
             color: #6c757d !important;
         }
+
+        .lightbox-container {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+        }
     </style>
 @endsection
 @section('content')
@@ -40,14 +68,6 @@
                     <a href="{{ route('transaksi', ['payment_status' => 'paid']) }}" class="btn btn-success btn-sm">Lunas</a>
                     <a href="{{ route('transaksi', ['payment_status' => 'unpaid']) }}" class="btn btn-danger btn-sm">Belum
                         Bayar</a>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover" id="dataTable" width="100%"
-                        cellspacing="0">
-                        <!-- ... (existing table structure) ... -->
-                    </table>
                 </div>
             </div>
         </div>
@@ -100,14 +120,10 @@
                                 </td>
                                 <td>
                                     @if ($data->bukti)
-                                        <a href="#" data-toggle="modal" data-target="#imageModal"
-                                            data-image="{{ asset('img/bukti/' . $data->bukti) }}">
-                                            <img src="{{ asset('img/bukti/' . $data->bukti) }}" alt="Bukti Transfer"
-                                                width="100">
-                                        </a>
-                                        {{-- <span class="badge badge-success">Lunas</span> --}}
+                                        <img src="{{ asset('img/bukti/' . $data->bukti) }}" alt="Bukti Transfer"
+                                            width="100" class="lightbox-trigger"
+                                            onclick="openLightbox('{{ asset('img/bukti/' . $data->bukti) }}')">
                                     @else
-                                        {{-- <p class="text-muted">No Proof Uploaded</p> --}}
                                         <span class="badge badge-danger">Belum Bayar</span>
                                     @endif
                                 </td>
@@ -126,36 +142,34 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="imageModalLabel">Bukti Transfer</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <img id="modalImage" src="" alt="Bukti Transfer" class="img-fluid">
-                </div>
-            </div>
-        </div>
+    <div class="lightbox-container" id="lightbox">
+        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+        <img class="lightbox-image" id="lightbox-img" src="" alt="Enlarged Image">
     </div>
 @endsection
+{{-- @section('script') --}}
 @section('script')
     <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#dataTable').DataTable();
+        });
 
-            $('#imageModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var imageUrl = button.data('image');
-                var modal = $(this);
-                modal.find('#modalImage').attr('src', imageUrl);
-            });
+        function openLightbox(imageUrl) {
+            document.getElementById('lightbox-img').src = imageUrl;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        // Close lightbox when clicking outside the image
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target !== this)
+                return;
+            closeLightbox();
         });
     </script>
 @endsection

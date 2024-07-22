@@ -211,12 +211,12 @@ class PemesananController extends Controller
     }
     public function uploadBukti(Request $request, $id)
     {
+        // dd($id);
         $request->validate([
             'bukti' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $pemesanan = Pemesanan::find($id);
-        // dd($pemesanan);
         if ($request->hasFile('bukti')) {
             $image = $request->file('bukti');
             $name = time() . '.' . $image->getClientOriginalExtension();
