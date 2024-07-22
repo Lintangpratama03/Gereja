@@ -88,7 +88,8 @@
                             <td>Waktu</td>
                             <td>Persembahan</td>
                             <td>Pendeta</td>
-                            <th>Status</th>
+                            <th>Status Admin</th>
+                            <th>Status Pendeta</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -116,6 +117,15 @@
                                 <td>Rp. {{ number_format($data->harga, 0, ',', '.') }}</td>
                                 <td>{{ $data->user->name }}</td>
                                 <td>
+                                    @if ($data->is_aktif == 0)
+                                        <button type="button" class="btn btn-secondary btn-sm">Belum Dicek</button>
+                                    @elseif($data->is_aktif == 1)
+                                        <button type="button" class="btn btn-success btn-sm">Terima</button>
+                                    @elseif($data->is_aktif == 2)
+                                        <button type="button" class="btn btn-danger btn-sm">Ditolak</button>
+                                    @endif
+                                </td>
+                                <td>
                                     @if ($data->status == 0)
                                         <button type="button" class="btn btn-secondary btn-sm">Belum Dicek</button>
                                     @elseif($data->status == 1)
@@ -125,16 +135,24 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <form action="{{ route('list.destroy', $data->id) }}" method="POST">
-                                        @csrf
-                                        @method('delete')
-                                        <a href="{{ route('list.edit', $data->id) }}" type="button"
-                                            class="btn btn-warning btn-sm btn-circle"><i class="fas fa-eye"></i></a>
-                                        {{-- <button type="submit" class="btn btn-danger btn-sm btn-circle"
+                                    @if ($data->is_aktif == 0)
+                                        <form action="{{ route('acara.confirm', $data->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary btn-sm"
+                                                onclick="return confirm('Yakin ingin konfirmasi?');">Konfirmasi</button>
+                                        </form>
+                                    @elseif($data->is_aktif == 1)
+                                        <form action="{{ route('list.destroy', $data->id) }}" method="POST">
+                                            @csrf
+                                            @method('delete')
+                                            <a href="{{ route('list.edit', $data->id) }}" type="button"
+                                                class="btn btn-warning btn-sm btn-circle"><i class="fas fa-eye"></i></a>
+                                            {{-- <button type="submit" class="btn btn-danger btn-sm btn-circle"
                                             onclick="return confirm('Yakin');">
                                             <i class="fas fa-trash"></i>
                                         </button> --}}
-                                    </form>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

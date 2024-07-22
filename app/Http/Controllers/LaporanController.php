@@ -9,10 +9,21 @@ use Illuminate\Support\Facades\Auth;
 
 class LaporanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pemesanan = Pemesanan::with('rute', 'penumpang')->orderBy('created_at', 'desc')->get();
-        // dd($pemesanan);
+        $query = Pemesanan::with('rute', 'penumpang')->orderBy('created_at', 'desc');
+
+        // Add filtering based on payment status
+        if ($request->has('payment_status')) {
+            if ($request->payment_status === 'paid') {
+                $query->whereNotNull('bukti');
+            } elseif ($request->payment_status === 'unpaid') {
+                $query->whereNull('bukti');
+            }
+        }
+
+        $pemesanan = $query->get();
+
         return view('server.laporan.index', compact('pemesanan'));
     }
 

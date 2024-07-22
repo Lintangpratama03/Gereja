@@ -27,12 +27,13 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama Gereja</th>
+                                <th>Nama Acara</th>
                                 <th>Jumlah Kursi</th>
                                 <th>Nama Pendeta</th>
                                 <th>Tanggal</th>
                                 <th>Harga</th>
-                                <th>Status</th>
+                                <th>Admin</th>
+                                <th>Pendeta</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -40,11 +41,20 @@
                             @foreach ($rute as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->transportasi->name }}</td>
+                                    <td>{{ $item->nama_acara }}</td>
                                     <td>{{ $item->transportasi->jumlah }}</td>
-                                    <td>{{ $item->pendeta }}</td>
-                                    <td>{{ $item->start }}</td>
+                                    <td>{{ $item->nama_pendeta }}</td>
+                                    <td>{{ $item->tanggal }}</td>
                                     <td>{{ $item->harga }}</td>
+                                    <td>
+                                        @if ($item->is_aktif == 0)
+                                            <button type="button" class="btn btn-secondary btn-sm">Belum Dicek</button>
+                                        @elseif($item->is_aktif == 1)
+                                            <button type="button" class="btn btn-success btn-sm">Terima</button>
+                                        @elseif($item->is_aktif == 2)
+                                            <button type="button" class="btn btn-danger btn-sm">Ditolak</button>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if ($item->status == 0)
                                             <button type="button" class="btn btn-secondary btn-sm">Belum Dicek</button>
@@ -55,22 +65,23 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($item->status_pesan == 0)
-                                            @if ($item->status == 1)
-                                                <a href="{{ route('pemesanan.pesan', $item->id) }}"
-                                                    class="btn btn-primary btn-sm">Pesan</a>
-                                            @elseif ($item->status == 2)
-                                                <a href="{{ route('pemesanan.pendeta', $item->id) }}"
-                                                    class="btn btn-primary">Ganti Pendeta</a>
+                                        @if ($item->is_aktif == 1)
+                                            @if ($item->status_pesan == 0)
+                                                @if ($item->status == 1)
+                                                    <a href="{{ route('pemesanan.pesan', $item->id) }}"
+                                                        class="btn btn-primary btn-sm">Pesan</a>
+                                                @elseif ($item->status == 2)
+                                                    <a href="{{ route('pemesanan.pendeta', $item->id) }}"
+                                                        class="btn btn-primary">Ganti Pendeta</a>
+                                                @endif
+                                            @elseif ($item->status_pesan == 1)
+                                                @if ($item->status == 1)
+                                                    Upload Bukti Di History
+                                                @elseif ($item->status == 3)
+                                                    <button type="button" class="btn btn-success btn-sm">Sukses</button>
+                                                @endif
                                             @endif
-                                        @elseif ($item->status_pesan == 1)
-                                            @if ($item->status == 1)
-                                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                                    data-target="#uploadBuktiModal" data-id="{{ $item->id }}">Upload
-                                                    Bukti</button>
-                                            @elseif ($item->status == 3)
-                                                <button type="button" class="btn btn-success btn-sm">Sukses</button>
-                                            @endif
+                                        @else
                                         @endif
                                     </td>
 
@@ -110,8 +121,8 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script> --}}
 
     <script>
         $('#uploadBuktiModal').on('show.bs.modal', function(event) {

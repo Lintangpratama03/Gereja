@@ -149,6 +149,7 @@ class PemesananController extends Controller
                 'tanggal' => $tanggal,
                 'pendeta' => $request->pendeta,
                 'end' => $request->end,
+                'is_aktif' => 0,
                 'harga' => $request->harga,
                 'transportasi_id' => $transportasi_id,
             ]
@@ -164,9 +165,12 @@ class PemesananController extends Controller
         // Mengambil rute dengan informasi transportasi dan menentukan status setiap rute
         $rute = Rute::with('transportasi')
             ->where('jemaat', $userId)
+            ->join('users', 'rute.pendeta', '=', 'users.id')
             ->select('rute.*')
+            ->selectRaw('users.name as nama_pendeta')
             ->selectRaw('CASE WHEN EXISTS (SELECT 1 FROM pemesanan WHERE pemesanan.rute_id = rute.id) THEN 1 ELSE 0 END AS status_pesan')
             ->get();
+
         // dd($rute);
         return view('client.pemesanan-list', compact('rute'));
     }
@@ -211,7 +215,7 @@ class PemesananController extends Controller
             'bukti' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $pemesanan = Rute::find($id);
+        $pemesanan = Pemesanan::find($id);
         // dd($pemesanan);
         if ($request->hasFile('bukti')) {
             $image = $request->file('bukti');

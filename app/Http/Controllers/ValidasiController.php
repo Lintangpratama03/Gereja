@@ -20,7 +20,7 @@ class ValidasiController extends Controller
         $id_user = Auth::user()->id;
         // dd($id_user);
         $transportasi = Transportasi::orderBy('kode')->orderBy('name')->get();
-        $rute = Rute::with('transportasi.category')->where('pendeta', $id_user)->orderBy('created_at', 'desc')->get();
+        $rute = Rute::with('transportasi.category')->where('is_aktif', 1)->where('pendeta', $id_user)->orderBy('created_at', 'desc')->get();
         // dd($rute);
         return view('server.validasi.index', compact('rute', 'transportasi'));
     }

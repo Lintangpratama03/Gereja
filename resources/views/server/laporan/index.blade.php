@@ -32,11 +32,24 @@
 @endsection
 @section('content')
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <!-- Button trigger modal -->
-            {{-- <button type="button" class="btn btn-primary btn-sm btn-add">
-                <i class="fas fa-plus"></i>
-            </button> --}}
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <!-- Filter buttons -->
+                <div class="float-right">
+                    <a href="{{ route('transaksi') }}" class="btn btn-secondary btn-sm">Semua</a>
+                    <a href="{{ route('transaksi', ['payment_status' => 'paid']) }}" class="btn btn-success btn-sm">Lunas</a>
+                    <a href="{{ route('transaksi', ['payment_status' => 'unpaid']) }}" class="btn btn-danger btn-sm">Belum
+                        Bayar</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover" id="dataTable" width="100%"
+                        cellspacing="0">
+                        <!-- ... (existing table structure) ... -->
+                    </table>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -48,7 +61,7 @@
                             <td>Jadwal</td>
                             <td>Acara</td>
                             <td>Pendeta</td>
-                            <td>Bukti Transfer</td> <!-- New column header for the proof of transfer image -->
+                            <td>Bukti Transfer</td>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -57,7 +70,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    <h5 class="card-title">{!! DNS1D::getBarcodeHTML($data->kode, 'C128', 2, 30) !!}</h5>
+                                    {{-- <h5 class="card-title">{!! DNS1D::getBarcodeHTML($data->kode, 'C128', 2, 30) !!}</h5> --}}
                                     <p class="card-text">
                                         <small class="text-muted">
                                             {{ $data->kode }}
@@ -86,14 +99,16 @@
                                     <h5 class="card-title">{{ $data->rute->user->name }}</h5>
                                 </td>
                                 <td>
-                                    @if ($data->rute->bukti)
+                                    @if ($data->bukti)
                                         <a href="#" data-toggle="modal" data-target="#imageModal"
-                                            data-image="{{ asset('img/bukti/' . $data->rute->bukti) }}">
-                                            <img src="{{ asset('img/bukti/' . $data->rute->bukti) }}" alt="Bukti Transfer"
+                                            data-image="{{ asset('img/bukti/' . $data->bukti) }}">
+                                            <img src="{{ asset('img/bukti/' . $data->bukti) }}" alt="Bukti Transfer"
                                                 width="100">
                                         </a>
+                                        {{-- <span class="badge badge-success">Lunas</span> --}}
                                     @else
-                                        <p class="text-muted">No Proof Uploaded</p>
+                                        {{-- <p class="text-muted">No Proof Uploaded</p> --}}
+                                        <span class="badge badge-danger">Belum Bayar</span>
                                     @endif
                                 </td>
                                 <td>

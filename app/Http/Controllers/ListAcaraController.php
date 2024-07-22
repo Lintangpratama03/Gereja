@@ -34,6 +34,14 @@ class ListAcaraController extends Controller
         // dd($rute);
         return view('server.acara.index', compact('rute', 'transportasi', 'pendeta'));
     }
+    public function confirm($id)
+    {
+        $rute = Rute::find($id);
+        $rute->is_aktif = 1;
+        $rute->save();
+
+        return redirect()->route('list.index')->with('success', 'Berhasil dikonfirmasi!');
+    }
 
     /**
      * Show the form for creating a new resource.

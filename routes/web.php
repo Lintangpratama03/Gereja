@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ListAcaraController;
 use App\Models\Pemesanan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -59,3 +60,6 @@ Route::patch('/rute/{id}/soft-delete', [App\Http\Controllers\ValidasiController:
 
 Route::get('/get-price', [App\Http\Controllers\PemesananController::class, 'getPrice'])->name('getPrice');
 Route::post('/check-schedule', [PemesananController::class, 'checkSchedule'])->name('check.schedule');
+
+// Route::post('/acara-confirm/{id}', [ListAcaraController::class, 'confirm'])->name('acara.confirm');
+Route::post('/acara/confirm/{id}', [ListAcaraController::class, 'confirm'])->name('acara.confirm');
