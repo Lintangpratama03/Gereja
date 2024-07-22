@@ -205,6 +205,27 @@ class PemesananController extends Controller
 
         return redirect()->route('pemesanan.list')->with('success', 'Pemesanan berhasil ditambahkan!');
     }
+    public function uploadBukti(Request $request, $id)
+    {
+        $request->validate([
+            'bukti' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $pemesanan = Rute::find($id);
+        // dd($pemesanan);
+        if ($request->hasFile('bukti')) {
+            $image = $request->file('bukti');
+            $name = time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('/img/bukti');
+            $image->move($destinationPath, $name);
+
+            $pemesanan->bukti = $name;
+            $pemesanan->save();
+        }
+
+        return redirect()->back()->with('success', 'Bukti transfer berhasil diupload.');
+    }
+
 
     private function translateDayName($dayName)
     {

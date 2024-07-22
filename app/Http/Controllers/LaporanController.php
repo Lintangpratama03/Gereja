@@ -12,6 +12,7 @@ class LaporanController extends Controller
     public function index()
     {
         $pemesanan = Pemesanan::with('rute', 'penumpang')->orderBy('created_at', 'desc')->get();
+        // dd($pemesanan);
         return view('server.laporan.index', compact('pemesanan'));
     }
 

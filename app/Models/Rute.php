@@ -19,6 +19,7 @@ class Rute extends Model
         'nama_acara',
         'jemaat',
         'tanggal',
+        'bukti',
         'transportasi_id'
     ];
 

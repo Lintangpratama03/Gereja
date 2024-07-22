@@ -63,9 +63,17 @@
                                                 <a href="{{ route('pemesanan.pendeta', $item->id) }}"
                                                     class="btn btn-primary">Ganti Pendeta</a>
                                             @endif
-                                        @else
+                                        @elseif ($item->status_pesan == 1)
+                                            @if ($item->status == 1)
+                                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                                    data-target="#uploadBuktiModal" data-id="{{ $item->id }}">Upload
+                                                    Bukti</button>
+                                            @elseif ($item->status == 3)
+                                                <button type="button" class="btn btn-success btn-sm">Sukses</button>
+                                            @endif
                                         @endif
                                     </td>
+
                                 </tr>
                             @endforeach
                         </tbody>
@@ -74,4 +82,44 @@
             </div>
         </div>
     </div>
+    <!-- Upload Bukti Modal -->
+    <div class="modal fade" id="uploadBuktiModal" tabindex="-1" role="dialog" aria-labelledby="uploadBuktiModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="POST" action="" enctype="multipart/form-data" id="uploadBuktiForm">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadBuktiModalLabel">Upload Bukti Transfer</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="bukti">Upload Bukti</label>
+                            <input type="file" class="form-control" id="bukti" name="bukti" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $('#uploadBuktiModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var id = button.data('id'); // Extract info from data-* attributes
+            var action = '{{ route('pemesanan.uploadBukti', ':id') }}';
+            action = action.replace(':id', id);
+            $('#uploadBuktiForm').attr('action', action);
+        });
+    </script>
 @endsection

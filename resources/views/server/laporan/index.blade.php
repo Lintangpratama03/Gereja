@@ -48,6 +48,7 @@
                             <td>Jadwal</td>
                             <td>Acara</td>
                             <td>Pendeta</td>
+                            <td>Bukti Transfer</td> <!-- New column header for the proof of transfer image -->
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -85,13 +86,44 @@
                                     <h5 class="card-title">{{ $data->rute->user->name }}</h5>
                                 </td>
                                 <td>
-                                    <a href="{{ route('transaksi.show', $data->kode) }}" class="btn btn-info btn-circle"><i
-                                            class="fas fa-search-plus"></i></a>
+                                    @if ($data->rute->bukti)
+                                        <a href="#" data-toggle="modal" data-target="#imageModal"
+                                            data-image="{{ asset('img/bukti/' . $data->rute->bukti) }}">
+                                            <img src="{{ asset('img/bukti/' . $data->rute->bukti) }}" alt="Bukti Transfer"
+                                                width="100">
+                                        </a>
+                                    @else
+                                        <p class="text-muted">No Proof Uploaded</p>
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('transaksi.show', $data->kode) }}" class="btn btn-info btn-circle">
+                                        <i class="fas fa-search-plus"></i>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
+
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Bukti Transfer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalImage" src="" alt="Bukti Transfer" class="img-fluid">
+                </div>
             </div>
         </div>
     </div>
@@ -102,6 +134,13 @@
     <script>
         $(document).ready(function() {
             $('#dataTable').DataTable();
+
+            $('#imageModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var imageUrl = button.data('image');
+                var modal = $(this);
+                modal.find('#modalImage').attr('src', imageUrl);
+            });
         });
     </script>
 @endsection

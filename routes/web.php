@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['penumpang'])->group(function () {
         Route::get('/pemesanan-list', [PemesananController::class, 'list'])->name('pemesanan.list');
         Route::get('/pemesanan-pesan/{id}', [PemesananController::class, 'pesan'])->name('pemesanan.pesan');
+        Route::post('/pemesanan/upload-bukti/{id}', [PemesananController::class, 'uploadBukti'])->name('pemesanan.uploadBukti');
         // Route::get('/pesan/{kursi}/{data}', [App\Http\Controllers\PemesananController::class, 'pesan'])->name('pesan');
         Route::get('/cari/kursi/{data}', [App\Http\Controllers\PemesananController::class, 'edit'])->name('cari.kursi');
         Route::resource('/', App\Http\Controllers\PemesananController::class);

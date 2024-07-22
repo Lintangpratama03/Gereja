@@ -15,6 +15,7 @@ class Pemesanan extends Model
         'waktu',
         'total',
         'status',
+        'bukti',
         'rute_id',
         'penumpang_id',
         'nama_acara',

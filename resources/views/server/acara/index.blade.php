@@ -105,7 +105,7 @@
                                     </p>
                                 </td>
                                 <td>
-                                    <h5 class="card-title">{{ $data->tujuan }}</h5>
+                                    <h5 class="card-title">{{ $data->tujuan }}, {{ $data->tanggal }}</h5>
                                     <p class="card-text">
                                         <small class="text-muted">
                                             {{ date('H:i', strtotime($data->start)) }} -

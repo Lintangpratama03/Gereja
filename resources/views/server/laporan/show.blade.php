@@ -83,9 +83,9 @@
                         <p style="margin-bottom: 0">Kode Booking</p>
                         <h3 class="font-weight-bold">{{ $data->kode }}</h3>
                     </div>
-                    <div class="col-auto">
+                    {{-- <div class="col-auto">
                         {!! DNS1D::getBarcodeHTML($data->kode, 'C128', 1.2, 45) !!}
-                    </div>
+                    </div> --}}
                 </div>
                 <p style="margin-bottom: 0; margin-top: 5px;">Jadwal Ibadah</p>
                 <h5 class="font-weight-bold text-center">
