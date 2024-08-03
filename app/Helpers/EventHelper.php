@@ -10,11 +10,11 @@ class EventHelper
     public static function getEvents()
     {
         // Get current date and time
-        $now = Carbon::now();
+        $now = Carbon::now()->startOfDay();
 
         // Get next Sunday's date
         $nextSunday = $now->copy()->next(Carbon::SUNDAY)->format('Y-m-d');
-        // dd($nextSunday);
+
         // Fetch events linked to routes in the 'pemesanan' table
         $eventsFromPemesanan = DB::table('pemesanan')
             ->join('rute', 'pemesanan.rute_id', '=', 'rute.id')
@@ -22,6 +22,7 @@ class EventHelper
             ->select('rute.*', 'pemesanan.nama_acara as acara', 'rute.tanggal')
             ->where('transportasi.rutin', 2)
             ->where('pemesanan.status', '!=', 'Belum Bayar')
+            ->whereDate('rute.tanggal', '>=', $now->format('Y-m-d'))
             ->get();
 
         // Fetch routine events that occur every Sunday
@@ -30,9 +31,9 @@ class EventHelper
             ->join('category', 'transportasi.category_id', '=', 'category.id')
             ->where('transportasi.rutin', 1)
             ->select('category.name as acara', 'rute.*', DB::raw("'{$nextSunday}' as tanggal"))
+            ->whereDate(DB::raw("'{$nextSunday}'"), '>=', $now->format('Y-m-d'))
             ->get();
 
-        // dd($routineEvents);
         // Combine the results
         $events = $eventsFromPemesanan->merge($routineEvents);
 

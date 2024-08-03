@@ -63,9 +63,16 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <!-- Filter buttons -->
+                <div class="float-left">
+                    <form action="{{ route('transaksi') }}" method="GET" class="form-inline">
+                        <input type="date" name="date" class="form-control mr-2" value="{{ $date }}">
+                        <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+                    </form>
+                </div>
                 <div class="float-right">
                     <a href="{{ route('transaksi') }}" class="btn btn-secondary btn-sm">Semua</a>
-                    <a href="{{ route('transaksi', ['payment_status' => 'paid']) }}" class="btn btn-success btn-sm">Lunas</a>
+                    <a href="{{ route('transaksi', ['payment_status' => 'paid']) }}"
+                        class="btn btn-success btn-sm">Lunas</a>
                     <a href="{{ route('transaksi', ['payment_status' => 'unpaid']) }}" class="btn btn-danger btn-sm">Belum
                         Bayar</a>
                 </div>
@@ -99,11 +106,11 @@
                                 </td>
                                 <td>
                                     <h5 class="card-title">
-                                        {{ $data->rute->tujuan }}, {{ date(' d F Y', strtotime($data->waktu)) }}</h5>
+                                        {{ $data->tujuan }}, {{ date(' d F Y', strtotime($data->waktu)) }}</h5>
                                     <p class="card-text">
                                         <small class="text-muted">
-                                            {{ date('H:i', strtotime($data->rute->start)) }} -
-                                            {{ date('H:i', strtotime($data->rute->end)) }}
+                                            {{ date('H:i', strtotime($data->start)) }} -
+                                            {{ date('H:i', strtotime($data->end)) }}
                                         </small>
                                     </p>
                                 </td>
@@ -116,7 +123,7 @@
                                     </p>
                                 </td>
                                 <td>
-                                    <h5 class="card-title">{{ $data->rute->user->name }}</h5>
+                                    <h5 class="card-title">{{ $data->pendeta_name }}</h5>
                                 </td>
                                 <td>
                                     @if ($data->bukti)
